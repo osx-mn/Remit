@@ -1,7 +1,14 @@
 # Remit
 
-This project is a Tauri application named Remit.
+Software de transferencia de archivos localmente entre siversos dispositivos
 
-## Recommended IDE Setup
+> [!NOTE]
+> Actualmente en desarrollo y disponible solo en sistemas windows, posteriormente se desarrollará para otros dispositivos
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+#### Tecnologías utilizadas
+
+- Tauri
+- Rust
+- Typescript
+- React
+- TailwindCSS
