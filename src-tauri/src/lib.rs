@@ -18,6 +18,17 @@ pub fn run() {
             backend_db::change_username,
             find_devices::find_devices
         ])
+        .setup(|app| {
+            // Enable native window decorations only on macOS
+            #[cfg(target_os = "macos")]
+            {
+                use tauri::Manager;
+                if let Some(window) = app.get_webview_window("main") {
+                    window.set_decorations(true)?;
+                }
+            }
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
