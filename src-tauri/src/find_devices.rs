@@ -1,3 +1,5 @@
+use crate::MdnsState;
+
 use local_ip_address::local_ip;
 use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo, TxtProperties};
 use serde::Serialize;
@@ -12,7 +14,9 @@ pub struct Dispositivo {
 }
 
 #[command]
-pub fn find_devices(app_handle: tauri::AppHandle) {
+pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>) {
+    let daemon_state = state.daemon.clone();
+
     tauri::async_runtime::spawn(async move {
         println!("Iniciando daemon...");
         let ty_domain: &str = "_remit_transfer._tcp.local.";
@@ -33,13 +37,9 @@ pub fn find_devices(app_handle: tauri::AppHandle) {
         )
         .unwrap();
 
-        let mdns_daemon = match ServiceDaemon::new() {
-            Ok(daemon) => daemon,
-            Err(error) => {
-                eprintln!("Error al iniciar el daemon: {}", error);
-                return;
-            }
-        };
+        let mdns_daemon = ServiceDaemon::new().unwrap();
+        //guardar daemon en state para shutdown global
+        *daemon_state.lock().unwrap() = Some(mdns_daemon.clone());
 
         mdns_daemon.register(service_info).unwrap();
 
@@ -93,18 +93,9 @@ pub fn find_devices(app_handle: tauri::AppHandle) {
                     println!("Dispositivo removido: {}", removed);
                     println!("Otra info: {}", otra_info);
 
-                    // let ip = removed
-                    //     .get_addresses()
-                    //     .iter()
-                    //     .next()
-                    //     .map(|ip| ip.to_string())
-                    //     .unwrap_or_default();
-
-                    let _ = app_handle.emit("mdns-device-removed", "");
+                    // let _ = app_handle.emit("mdns-device-removed", "");
                 }
-                _ => {
-                    println!("No entraaaaaaaa");
-                }
+                _ => {}
             }
         }
     });
