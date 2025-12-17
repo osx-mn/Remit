@@ -6,6 +6,7 @@ use mdns_sd::ServiceDaemon;
 use std::sync::{Arc, Mutex};
 use tauri::Manager;
 
+// Estructura para almacenar el daemon de mdns y que funcione para acceder globalmente a él
 pub struct MdnsState {
     pub daemon: Arc<Mutex<Option<ServiceDaemon>>>,
 }
