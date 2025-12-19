@@ -34,7 +34,7 @@
         const get_devices_list = async() =>{
 
                 //detecta un dispositivo en la red de tipo remit
-                const unlistenFound = listen<Dispositivo>(
+                const unlistenFound = await listen<Dispositivo>(
                     "mdns-device-found",
                     (event) => {
                         setDevices(prev => {
@@ -47,12 +47,15 @@
                 );
 
                 //detecta cuando un dispositivo se remueve de la red de tipo remit
-                const unListenRemove = listen<Dispositivo>(
+                const unListenRemove = await listen<string>(
                     "mdns-device-removed",
                     (event) => {
                         setDevices(prev => {
-                            const next = new Map(prev);
-                            next.delete(event.payload.full_name);
+                            const next: Map<string, Dispositivo> = new Map(prev);
+                            console.log("Estado previo: ", next);
+                            next.delete(event.payload);
+                            console.log("payload completo: ", event.payload);
+                            console.log("Estado actual: ", next);
                             return next;
                         })
                     }
@@ -60,22 +63,16 @@
 
                 await invoke("find_devices");
 
-                return async () => {
-                    const unlistenADD = await unlistenFound;
-                    const unlistenDel = await unListenRemove;
-                    unlistenADD();
-                    unlistenDel();
+                return () => {
+                    unlistenFound();
+                    unListenRemove();
                 }
+
             }
 
         useEffect(() => {
             fetchUserName();
-
-            //ejecutar y guardar la promesa de limpieza
-            const cleanupPromise = get_devices_list();
-            return () => {
-                cleanupPromise.then(cleanup => cleanup());
-            }
+            get_devices_list();
         }, []);
 
         //ver los cambios en Dispositivos

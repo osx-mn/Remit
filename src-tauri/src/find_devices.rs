@@ -17,6 +17,7 @@ pub struct Dispositivo {
 #[command]
 pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>) {
     let daemon_state = state.daemon.clone();
+    let service_full_name_state = state.service_full_name.clone();
 
     tauri::async_runtime::spawn(async move {
         println!("Iniciando daemon...");
@@ -52,9 +53,11 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
         )
         .unwrap();
 
+        let service_full_name = service_info.get_fullname().to_string();
         let mdns_daemon = ServiceDaemon::new().unwrap();
         //guardar daemon en state para shutdown global
         *daemon_state.lock().unwrap() = Some(mdns_daemon.clone());
+        *service_full_name_state.lock().unwrap() = Some(service_full_name.clone());
 
         mdns_daemon.register(service_info).unwrap();
 

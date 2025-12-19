@@ -16,7 +16,7 @@ pub struct UsuarioApp {
 
 #[command]
 pub fn consultas_db() -> Result<Vec<Dispositivos>, String> {
-    let conn = Connection::open("test.db").map_err(|e| e.to_string())?;
+    let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
 
     //NOTA!, en lugar de utiliar un simple "?", utilio un map_err(|e| e.to_string())?
     // para que el frontend pueda manejar el error como un string
@@ -45,7 +45,7 @@ pub fn consultas_db() -> Result<Vec<Dispositivos>, String> {
 
 #[command]
 pub fn user_app() -> Result<String, String> {
-    let conn = Connection::open("test.db").map_err(|e| e.to_string())?;
+    let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
     if let Err(e) = init_db() {
         eprintln!("Error al inicializar la base de datos: {:?}", e);
     }; //inicializar la base de datos, el _ es para ignorar el resultado
@@ -102,7 +102,7 @@ pub fn user_app() -> Result<String, String> {
 
 #[command]
 pub fn change_username(new_name: String) -> Result<(), String> {
-    let conn = Connection::open("test.db").map_err(|e| e.to_string())?;
+    let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
 
     println!("nombre entrante: {:?}", new_name);
 
@@ -150,7 +150,7 @@ fn username_exists(conn: &Connection) -> bool {
 //inicializar la base de datos
 //solo se ejecuta la primera vez que se ejecuta la app
 fn init_db() -> Result<(), String> {
-    let conn = Connection::open("test.db").map_err(|e| e.to_string())?;
+    let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
 
     //comprobar que no existen tablas
     let tablas_count: i8 = conn
@@ -160,36 +160,11 @@ fn init_db() -> Result<(), String> {
     if tablas_count == 0 {
         //crear la tabla de usuario_app
         conn.execute(
-            "CREATE TABLE IF NOT EXISTS 'dispositivos'(
-        id INTEGER PRIMARY KEY,
-        nombre_dispositivo TEXT NOT NULL
-        );",
-            [],
-        )
-        .map_err(|e| e.to_string())?;
-
-        //crear la tabla de usuario_app
-        conn.execute(
             "CREATE TABLE IF NOT EXISTS 'usuario_app'(
         id INTEGER PRIMARY KEY NOT NULL,
         nombre_usuario TEXT NOT NULL)
         ;",
             [],
-        )
-        .map_err(|e| e.to_string())?;
-
-        //insertar dispositivos
-        conn.execute(
-            "INSERT INTO dispositivos (nombre_dispositivo) VALUES (?), (?), (?), (?), (?), (?), (?)",
-            [
-                "Xiaomi",
-                "iPhone",
-                "Android",
-                "Windows",
-                "Linux",
-                "Mac",
-                "Chromebook",
-            ],
         )
         .map_err(|e| e.to_string())?;
     }
