@@ -26,4 +26,3 @@ rusqlite = { version = "0.37.0", features = ["bundled"] }
 hostname = "^0.4"
 mdns-sd = "0.17.1"
 local-ip-address = "0.6.6"
-tokio = { version = "1", features = ["full"] }

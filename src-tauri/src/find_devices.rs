@@ -1,7 +1,7 @@
 use crate::MdnsState;
 
 use local_ip_address::local_ip;
-use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo, TxtProperties};
+use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
 use serde::Serialize;
 use tauri::{command, Emitter};
 
@@ -37,9 +37,9 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
 
         let instance_name: &str = nombre_dispositivo.as_str();
         let hostname: &str = "Remit.local.";
-        let ip: String = local_ip().unwrap().to_string();
+        let this_device_ip: String = local_ip().unwrap().to_string();
 
-        let port = 8989;
+        let this_device_port = 8989;
 
         let properties = [("nombre_dispositivo", nombre_dispositivo.clone())];
 
@@ -47,15 +47,16 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
             ty_domain,
             instance_name,
             hostname,
-            ip,
-            port,
+            &this_device_ip,
+            this_device_port,
             &properties[..],
         )
         .unwrap();
 
         let service_full_name = service_info.get_fullname().to_string();
         let mdns_daemon = ServiceDaemon::new().unwrap();
-        //guardar daemon en state para shutdown global
+
+        //guardar daemon y nombre del servicio en state para shutdown global desde lib.rs
         *daemon_state.lock().unwrap() = Some(mdns_daemon.clone());
         *service_full_name_state.lock().unwrap() = Some(service_full_name.clone());
 
@@ -75,14 +76,14 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
         while let Ok(event) = receiver.recv() {
             match event {
                 ServiceEvent::ServiceResolved(resolved) => {
-                    let ip = resolved
+                    let external_device_ip = resolved
                         .get_addresses()
                         .iter()
                         .next()
                         .map(|ip| ip.to_string())
                         .unwrap_or_default();
 
-                    let port = resolved.get_port();
+                    let external_device_port = resolved.get_port();
 
                     let properties: Vec<_> = resolved
                         .txt_properties
@@ -94,24 +95,18 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
                     let dispositivo = Dispositivo {
                         full_name: resolved.get_fullname().to_string(),
                         disp_name: resolved.get_hostname().to_string(),
-                        ip: ip.clone(),
-                        port: resolved.get_port(),
+                        ip: external_device_ip.clone(),
+                        port: external_device_port,
                         properties: properties.clone(),
                     };
 
-                    println!("Dispositivo encontrado: {}", dispositivo.disp_name.clone());
-                    println!("IP: {}", ip.clone());
-                    println!("Port: {}", resolved.get_port());
-                    println!("Properties: {:#?}", properties.clone());
-                    println!("Full name: {}", resolved.get_fullname());
-
-                    let _ = app_handle.emit("mdns-device-found", dispositivo);
+                    //enviar información de dispositivos encontrados diferentes al propio
+                    if this_device_ip != external_device_ip {
+                        let _ = app_handle.emit("mdns-device-found", dispositivo);
+                    }
                 }
 
-                ServiceEvent::ServiceRemoved(removed, full_name) => {
-                    println!("Dispositivo removido: {}", removed);
-                    println!("Full name: {}", full_name);
-
+                ServiceEvent::ServiceRemoved(_, full_name) => {
                     let _ = app_handle.emit("mdns-device-removed", full_name);
                 }
                 _ => {}

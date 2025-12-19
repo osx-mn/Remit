@@ -26,12 +26,12 @@ pub fn run() {
             backend_db::change_username,
             find_devices::find_devices
         ])
-        .setup(|app| {
-            // Enable native window decorations only on macOS
-            #[cfg(target_os = "macos")]
+        .setup(|_app| {
+            // Enable native window decorations in macOs and Linux
+            #[cfg(any(target_os = "macos", target_os = "linux"))]
             {
                 use tauri::Manager;
-                if let Some(window) = app.get_webview_window("main") {
+                if let Some(window) = _app.get_webview_window("main") {
                     window.set_decorations(true)?;
                 }
             }

@@ -46,36 +46,15 @@ pub fn consultas_db() -> Result<Vec<Dispositivos>, String> {
 #[command]
 pub fn user_app() -> Result<String, String> {
     let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
-    if let Err(e) = init_db() {
-        eprintln!("Error al inicializar la base de datos: {:?}", e);
-    }; //inicializar la base de datos, el _ es para ignorar el resultado
+    init_db().unwrap();
 
-    //Obtener el nombre del usuario actual, de la APP
-
-    let mut res = String::from("nada");
-
-    //Saber si el usuario se ha establecido un nombre
-    let existe_nombre: i8 = conn
-        .query_row(
-            "SELECT count(*) FROM usuario_app",
-            [],
-            |row| Ok(row.get(0)?),
-        )
-        .map_err(|e| e.to_string())?;
-
-    //si el usuario no tiene nombre, valió queso, digo, mostramos el nombre del dispositivo
-    if username_exists(&conn) {
+    //si el usuario no tiene nombre, se muestra el nombre del dispositivo host
+    let res: String = if username_exists(&conn) {
         //obtener el nombre del dispositivo
-        let nombre_dispositivo = match hostname::get() {
-            Ok(host) => host,
-            Err(e) => {
-                eprintln!("Error al obtener el nombre del dispositivo: {:?}", e);
-                return Err("Error al obtener el nombre del dispositivo".to_string());
-            }
-        };
+        let nombre_dispositivo = hostname::get().unwrap();
 
         //convertir el nombre del dispositivo a string
-        res = match nombre_dispositivo.into_string() {
+        match nombre_dispositivo.into_string() {
             Ok(nombre) => String::from(nombre),
             Err(e) => {
                 eprintln!(
@@ -84,7 +63,7 @@ pub fn user_app() -> Result<String, String> {
                 );
                 String::from("Error")
             }
-        };
+        }
 
     // si no, mostremos el nombre que registrado en la base de datos
     } else {
@@ -95,8 +74,9 @@ pub fn user_app() -> Result<String, String> {
                 })
             })
             .map_err(|e| e.to_string())?;
-        res = String::from(usuario_app.nombre_usuario);
-    }
+        String::from(usuario_app.nombre_usuario)
+    };
+
     Ok(res)
 }
 
