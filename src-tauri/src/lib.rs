@@ -1,6 +1,7 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 mod backend_db;
 mod find_devices;
+mod get_in_backend;
 
 use mdns_sd::ServiceDaemon;
 use std::sync::{Arc, Mutex};
@@ -15,6 +16,7 @@ pub struct MdnsState {
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
         .manage(MdnsState {
             daemon: Arc::new(Mutex::new(None)),
@@ -24,7 +26,8 @@ pub fn run() {
             backend_db::consultas_db,
             backend_db::user_app,
             backend_db::change_username,
-            find_devices::find_devices
+            find_devices::find_devices,
+            get_in_backend::get_in_backend
         ])
         .setup(|_app| {
             // Enable native window decorations in macOs and Linux
