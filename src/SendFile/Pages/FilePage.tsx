@@ -2,6 +2,8 @@
     import { invoke } from "@tauri-apps/api/core";
     import { listen } from "@tauri-apps/api/event";
 
+    import { DeviceProvider } from "../../context/DeviceContext";
+
     import DevicesContainer from "../Components/Organisms/DevicesContainer";
     import FilesContainer from "../Components/Organisms/FilesContainer";
     import Modal from "../Components/Organisms/Modal";
@@ -78,7 +80,7 @@
         //ver los cambios en Dispositivos
         useEffect(() => {
             console.log("Devices: ", devices);
-        }), [devices];
+        }, [devices]);
 
         const handleModal = () =>{
             setModalActive(true);
@@ -89,11 +91,19 @@
         }
 
         return(
-            <div className="flex items-center w-full h-full bg-[#161616]">
-                <DevicesContainer key={devices.size} devicesList={Array.from(devices.values())}/>
-                <FilesContainer onClick={handleModal} username={username}/>
-                <Modal ModalActive={modalActive} onClick={handleModalClose} onNameChange={fetchUserName}/>
-            </div>
+            <DeviceProvider>
+                <div className="flex items-center w-full h-full bg-[#161616]">
+                    <DevicesContainer
+                        key={"devContKey"}
+                        devicesList={Array.from(devices.values())}/>
+
+                    <FilesContainer
+                        onClick={handleModal}
+                        username={username}/>
+
+                    <Modal ModalActive={modalActive} onClick={handleModalClose} onNameChange={fetchUserName}/>
+                </div>
+            </DeviceProvider>
         )
     }
 

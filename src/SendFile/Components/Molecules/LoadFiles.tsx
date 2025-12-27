@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 
+import { useDevice } from "../../../context/DeviceContext";
+
 interface LoadFilesProps{
     onFileSelect: (filePath: string) => void;
 }
 
-const LoadFiles: React.FC<LoadFilesProps> = ({onFileSelect}) => {
+const LoadFiles: React.FC<LoadFilesProps> = ({ onFileSelect }) => {
     const [fileName, setFileName] = useState<string>("Ningún archivo seleccionado");
+
+    //leer el contetxo global de dispositivo seleccionado
+    const { deviceSelected }= useDevice();
 
     //función para seleccionar archivo con ruta absoluta del plugin tauri-plugin-dialog 
     const handleFileSelect = async () => {
@@ -29,7 +34,12 @@ const LoadFiles: React.FC<LoadFilesProps> = ({onFileSelect}) => {
             <div className="border border-stone-600 w-[95%] h-[95%] rounded-md flex flex-col items-center justify-center">
                 <p className="text-white text-center text-2xl">Cargar archivos</p>
 
-                <button className="px-5 py-1 mt-5 border border-white rounded-sm text-white" onClick={handleFileSelect}>Seleccionar archivos</button>
+                <button
+                    className="px-5 py-1 mt-5 border border-white rounded-sm text-white disabled:opacity-30 disabled:border-gray-500 disabled:cursor-not-allowed"
+                    onClick={handleFileSelect}
+                    disabled={!deviceSelected}>
+                        Seleccionar archivos</button>
+
                 <p className="text-white mt-5">{fileName.split(/[\\/]/).pop() ?? ""}</p>
             </div>
         </div>

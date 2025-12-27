@@ -4,15 +4,8 @@ use suppaftp::FtpStream;
 use tauri::command;
 
 #[command]
-pub async fn ftp_client(file_path: String) -> Result<(), String> {
-    let ip: String = match local_ip() {
-        Ok(ip) => ip.to_string(),
-        Err(e) => {
-            println!("Error al obtener la IP: {}", e);
-            println!("Conectandose a la red local: 127.0.0.1");
-            "127.0.0.1".to_string()
-        }
-    };
+pub async fn ftp_client(file_path: String, target_device: String) -> Result<(), String> {
+    let ip: String = target_device;
     let port: u16 = 2121;
 
     //----- Conectarse al servidor ftp
