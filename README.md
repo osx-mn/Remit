@@ -12,7 +12,7 @@ Funciona mediante el descubrimiento de dispositivos mediante mDNS que se encuent
 
 #### Funcionamiento
 
-![Diagrama de casos de uso de Remit](docs/Diagrams/uml_casos_de_uso.drawio)
+![Diagrama de casos de uso de Remit](Docs/Diagrams/uml_casos_de_uso.png)
 
 #### Tecnologías utilizadas
 
