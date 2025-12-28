@@ -1,0 +1,58 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.4 Chrome/138.0.7204.97 Electron/37.2.1 Safari/537.36" version="28.0.4">
+  <diagram name="Página-1" id="ua9cFDHSSZP2bqA_GZHi">
+    <mxGraphModel dx="1026" dy="622" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-47" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="189" y="46" width="349" height="381" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-5" value="Remit" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=poppins;fontSize=17;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="321.25" y="48" width="98" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-12" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=1;entryDx=0;entryDy=0;shadow=1;elbow=vertical;" edge="1" parent="1" source="iUaPLU9w5RxOaSiX6L8C-6" target="iUaPLU9w5RxOaSiX6L8C-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-6" value="Cliente" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontStyle=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="114" y="246" width="42" height="82" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-10" value="Seleccionar archivos en el dispositivo" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="378.25" y="135" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-22" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;shadow=1;dashed=1;endArrow=none;endFill=0;" edge="1" parent="1" source="iUaPLU9w5RxOaSiX6L8C-11" target="iUaPLU9w5RxOaSiX6L8C-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-11" value="Enviar los archivos seleccionados" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="303.5" y="278" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-13" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;shadow=1;" edge="1" parent="1" source="iUaPLU9w5RxOaSiX6L8C-6" target="iUaPLU9w5RxOaSiX6L8C-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="358.5" y="328" as="sourcePoint" />
+            <mxPoint x="515.5" y="362" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-15" value="Selección de dispositivos Descubiertos en red" style="ellipse;whiteSpace=wrap;html=1;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="238" y="135" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-16" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=1;entryDx=0;entryDy=0;shadow=1;" edge="1" parent="1" source="iUaPLU9w5RxOaSiX6L8C-6" target="iUaPLU9w5RxOaSiX6L8C-15">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="243.5" y="349" as="sourcePoint" />
+            <mxPoint x="421.5" y="438" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-17" value="Los dispositivos son descubiertos por búsqueda mDNS interna del sistema." style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=14;align=left;shadow=1;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="567" y="46" width="171" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-20" value="Precondición:&amp;nbsp;&lt;div&gt;&lt;ul&gt;&lt;li&gt;Dispositivo destino seleccionado&lt;/li&gt;&lt;li&gt;Uno o más archivos seleccionados&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;size=14;align=left;shadow=1;spacingLeft=10;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="578" y="267" width="171" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="iUaPLU9w5RxOaSiX6L8C-48" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;shadow=1;dashed=1;endArrow=none;endFill=0;" edge="1" parent="1" source="iUaPLU9w5RxOaSiX6L8C-15" target="iUaPLU9w5RxOaSiX6L8C-17">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="375" y="283" as="sourcePoint" />
+            <mxPoint x="535" y="249" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

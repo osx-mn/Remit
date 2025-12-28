@@ -35,8 +35,13 @@ const Modal: React.FC<ModalProps> = ({ModalActive, onClick, onNameChange}) => {
         }
     }
 
+    const handleCancel = () => {
+        setInputName("");
+        onClick(); // cierra el modal
+    };
+
     return(
-        <div id="modal" className={`${ModalActive ? 'flex flex-col' : 'hidden'} fixed w-[400px] h-[100px] ml-[40%] z-10 items-center justify-center bg-[#303030] rounded-[5px]`}>
+        <div id="modal" className={`${ModalActive ? 'flex flex-col' : 'hidden'} fixed w-[400px] h-[120px] ml-[40%] z-10 items-center justify-center bg-[#303030] rounded-[5px]`}>
             <InputWithLabel
             id="input_name"
             label="NOMBRE DE USUARIO"
@@ -46,12 +51,21 @@ const Modal: React.FC<ModalProps> = ({ModalActive, onClick, onNameChange}) => {
             onChange={(e) => handleChange(e)}
             />
             
-            <BtnAutosize
-            id="btn_send"
-            x="100"
-            y="50"
-            text="Cambiar nombre"
-            onclick={handleSubmit}/>
+            <div className='w-full flex items-center justify-center'>
+                <BtnAutosize
+                id="btn_send"
+                x="100"
+                y="50"
+                text="Cambiar nombre"
+                onclick={handleSubmit}/>
+
+                <BtnAutosize
+                id="btn_cancel"
+                x="100"
+                y="50"
+                text="Cancelar"
+                onclick={handleCancel}/>
+            </div>
         </div>
     )
 }

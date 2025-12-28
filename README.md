@@ -1,9 +1,18 @@
 # Remit
 
-Software de transferencia de archivos localmente (LAN) entre dispositivos.
+Software de transferencia de archivos localmente (peer-to-peer) entre dispositivos, sin servidor central.
 
-> [!NOTE]
-> Este proyecto se encuentra en desarrollo, en sus primeras versiones estará disponible solo en computadoras (Windows, Linux, macOS), posteriormente se desarrollará para dispositivos móviles
+Funciona mediante el descubrimiento de dispositivos mediante mDNS que se encuentren con el software en ejecución para la transferencia de archivos por FTP.
+
+#### Plataformas compatibles
+
+- Windows (estable)
+- Linux (en desarrollo)
+- MacOS (en desarrollo)
+
+#### Funcionamiento
+
+![Diagrama de casos de uso de Remit](docs/Diagrams/uml_casos_de_uso.drawio)
 
 #### Tecnologías utilizadas
 
