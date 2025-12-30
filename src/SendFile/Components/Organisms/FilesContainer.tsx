@@ -20,6 +20,7 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
     }, []);
 
     const handleSendFile = async (fileName: string) => {
+        console.log("ip destino: ",deviceSelectedIp)
         await invoke("ftp_client", {
             filePath: fileName,
             targetDevice: deviceSelectedIp,
