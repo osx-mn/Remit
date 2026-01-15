@@ -26,7 +26,7 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": ["msi", "nsis", "deb", "rpm"],
     "icon": [
       "icons/Remit.svg",
       "icons/Remit.png",
