@@ -3,6 +3,7 @@ mod backend_db;
 mod find_devices;
 mod ftp_client;
 mod ftp_server;
+mod utils;
 
 use mdns_sd::ServiceDaemon;
 use std::sync::{Arc, Mutex};
@@ -30,6 +31,7 @@ pub fn run() {
             find_devices::find_devices,
             ftp_server::ftp_server,
             ftp_client::ftp_client,
+            utils::show_custom_titlebar_in_os,
         ])
         .setup(|_app| {
             // Enable native window decorations in macOs and Linux
