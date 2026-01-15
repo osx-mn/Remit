@@ -15,7 +15,7 @@ const App = () =>{
   }
 
   useEffect(() => {
-    GetOs
+    GetOs()
   }, []);
 
   return(
