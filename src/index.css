@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 html, body{
-  height: calc(100% - 17.5px);
+  height: 100%;
   width: 100%;
   margin: 0;
   padding: 0;
   -webkit-user-select: none;
   user-select: none;
   position: fixed;
+}
+
+body.has-custom-titlebar {
+  height: calc(100% - 34px);
 }
 
 #root{

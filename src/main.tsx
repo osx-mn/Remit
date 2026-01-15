@@ -11,6 +11,12 @@ const App = () =>{
 
   const GetOs = async () =>{
     let showTitlebarInSpecificOS = await invoke<boolean>("show_custom_titlebar_in_os");
+    
+    //corregir espacio sobrante al quitar barra de titulo
+    if (showTitlebarInSpecificOS){
+       document.body.classList.add('has-custom-titlebar');
+    }
+
     setShowTitlebar(showTitlebarInSpecificOS);
   }
 
