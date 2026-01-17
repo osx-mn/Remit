@@ -31,16 +31,45 @@ button:active{
   transition: 0.1s;
 }
 
-.success-send-file{
-  display: none;
-  width: 0;
-  transition: width 0.5s ease-in-out;
+.success-transfer {
+  overflow: hidden;
+  white-space: nowrap;
+
+  opacity: 0;
+  transform: translateY(6px);
 }
 
-.success-send-file.show{
-  display: block;
-  width: 200px;
+.show-send{
+  background-color: #51C1A4;
+  color: #333E48;
+  animation: notify 3s ease forwards;
 }
+
+@keyframes notify {
+  /* Aparece */
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Se mantiene visible */
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Desaparece */
+  100% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+
 
 /*-- centrado vertical y horizontal --*/
 .center-v{ display: flex; align-items: center; }

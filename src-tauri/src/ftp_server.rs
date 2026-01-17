@@ -2,8 +2,6 @@ use local_ip_address::local_ip;
 use tauri::{command, Manager};
 use unftp_sbe_fs::ServerExt;
 
-//usar tokio aquí si se utiliza como código principa
-
 #[command]
 pub async fn ftp_server(app: tauri::AppHandle) -> Result<(), String> {
     //----- obtener la ruta de destino de archivos por defecto, en documentos/Remit

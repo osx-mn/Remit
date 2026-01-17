@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import LoadFiles from "../Molecules/LoadFiles";
 import EditUserName from "../Molecules/EditUserName";
 import { invoke } from "@tauri-apps/api/core";
+import { listen } from "@tauri-apps/api/event";
 
 import { useDevice } from "../../../context/DeviceContext";
 
@@ -14,10 +15,18 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
 
     const [selectedFile, setSelectedFile] = useState<string>("");
     const { deviceSelected, deviceSelectedIp }= useDevice();
-    const [sendState, setSendState] = useState<string>("");
+    const [transferState, setTransferState] = useState<string>("");
+    const [stateMessage, setStateMessage] = useState<string>("");
 
     useEffect(() => {
         invoke("ftp_server");
+
+        listen<boolean>("send_status", (event) => {
+            if (event.payload){
+                setTransferState("show-send");
+                setStateMessage("Archivo enviado!");
+            }
+        })
     }, []);
 
     const handleSendFile = async (fileName: string) => {
@@ -26,7 +35,6 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
             filePath: fileName,
             targetDevice: deviceSelectedIp,
         })
-        setSendState("show");
     }
 
     console.log("disables state: ", deviceSelected);
@@ -41,7 +49,7 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
                 disabled={!deviceSelected}>
                 <p className="text-white">Enviar archivos</p>
             </button>
-            <p className={`bg-[#51C1A4] px-[25px] py-[5px] rounded-[5px] mt-[20px] text-[#333E48] success-send-file ${sendState}`}>Archivo enviado</p>
+            <p className={`px-[25px] py-[5px] rounded-[5px] mt-[20px] success-transfer ${transferState}`} onAnimationEnd={() => setTransferState("")}>{stateMessage}</p>
         </div>
     )
 }

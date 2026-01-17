@@ -1,9 +1,13 @@
 use std::{fs::File, path::Path};
 use suppaftp::FtpStream;
-use tauri::command;
+use tauri::{command, Emitter};
 
 #[command]
-pub async fn ftp_client(file_path: String, target_device: String) -> Result<(), String> {
+pub async fn ftp_client(
+    file_path: String,
+    target_device: String,
+    app_handle: tauri::AppHandle,
+) -> Result<(), String> {
     let ip: String = target_device;
     let port: u16 = 2001;
 
@@ -33,6 +37,7 @@ pub async fn ftp_client(file_path: String, target_device: String) -> Result<(), 
         Ok(_) => {
             println!("Archivo enviado correctamente");
             let _ = ftp_stream.quit().map_err(|e| e.to_string());
+            let _ = app_handle.emit("send_status", true).unwrap();
         }
         Err(e) => println!("Error al subir el archivo: {}", e),
     };

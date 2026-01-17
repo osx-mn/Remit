@@ -1,5 +1,6 @@
 use crate::MdnsState;
 
+use crate::backend_db;
 use local_ip_address::local_ip;
 use mdns_sd::{ServiceDaemon, ServiceEvent, ServiceInfo};
 use serde::Serialize;
@@ -23,15 +24,11 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
         println!("Iniciando daemon...");
         let ty_domain: &str = "_remit_transfer._tcp.local.";
 
-        let hotname_ostring = hostname::get().map_err(|e| e.to_string());
-        let nombre_dispositivo: String = match hotname_ostring
-            .expect("Error al obtener nombre del dispositivo")
-            .into_string()
-        {
-            Ok(host) => host,
+        let nombre_dispositivo = match backend_db::user_app() {
+            Ok(nombre) => nombre,
             Err(e) => {
-                eprintln!("Error al obtener nombre del dispositivo: {:?}", e);
-                String::from("Error")
+                eprintln!("Error al leer el nombre: {}", e);
+                String::from("Invitado")
             }
         };
 
