@@ -26,7 +26,7 @@ pub async fn ftp_server(app: tauri::AppHandle) -> Result<(), String> {
             "127.0.0.1".to_string()
         }
     };
-    let port: u16 = 21;
+    let port: u16 = 2001;
 
     //----- Encendido asíncrono del servidor ftp
     tauri::async_runtime::spawn(async move {

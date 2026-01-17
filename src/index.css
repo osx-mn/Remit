@@ -31,6 +31,17 @@ button:active{
   transition: 0.1s;
 }
 
+.success-send-file{
+  display: none;
+  width: 0;
+  transition: width 0.5s ease-in-out;
+}
+
+.success-send-file.show{
+  display: block;
+  width: 200px;
+}
+
 /*-- centrado vertical y horizontal --*/
 .center-v{ display: flex; align-items: center; }
 .center-h{ display: flex; justify-content: center; }

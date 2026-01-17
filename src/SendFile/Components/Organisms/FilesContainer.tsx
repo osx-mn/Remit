@@ -14,6 +14,7 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
 
     const [selectedFile, setSelectedFile] = useState<string>("");
     const { deviceSelected, deviceSelectedIp }= useDevice();
+    const [sendState, setSendState] = useState<string>("");
 
     useEffect(() => {
         invoke("ftp_server");
@@ -25,6 +26,7 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
             filePath: fileName,
             targetDevice: deviceSelectedIp,
         })
+        setSendState("show");
     }
 
     console.log("disables state: ", deviceSelected);
@@ -39,6 +41,7 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
                 disabled={!deviceSelected}>
                 <p className="text-white">Enviar archivos</p>
             </button>
+            <p className={`bg-[#51C1A4] px-[25px] py-[5px] rounded-[5px] mt-[20px] text-[#333E48] success-send-file ${sendState}`}>Archivo enviado</p>
         </div>
     )
 }

@@ -5,7 +5,7 @@ use tauri::command;
 #[command]
 pub async fn ftp_client(file_path: String, target_device: String) -> Result<(), String> {
     let ip: String = target_device;
-    let port: u16 = 21;
+    let port: u16 = 2001;
 
     //----- Conectarse al servidor ftp
     let mut ftp_stream = match FtpStream::connect(format!("{}:{}", ip, port)) {
