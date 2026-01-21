@@ -39,6 +39,10 @@ button:active{
   transform: translateY(6px);
 }
 
+.show{
+  opacity: 1;
+}
+
 .show-send{
   background-color: #51C1A4;
   color: #333E48;

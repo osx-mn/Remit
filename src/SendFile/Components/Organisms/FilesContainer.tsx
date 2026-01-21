@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import LoadFiles from "../Molecules/LoadFiles";
 import EditUserName from "../Molecules/EditUserName";
+import LoadingBar from "../Molecules/LoadingBar";
+
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 
@@ -15,22 +17,46 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
 
     const [selectedFile, setSelectedFile] = useState<string>("");
     const { deviceSelected, deviceSelectedIp }= useDevice();
-    const [transferState, setTransferState] = useState<string>("");
+    const [transferState, setTransferState] = useState<boolean>(false);
+    
     const [stateMessage, setStateMessage] = useState<string>("");
 
-    useEffect(() => {
-        invoke("ftp_server");
+    const [sendingProcess, setSendingProcess] = useState<number>(0);
+    const [showLoadingBar, setShowLoadingBar] = useState<boolean>(false);
 
-        listen<boolean>("send_status", (event) => {
-            if (event.payload){
-                setTransferState("show-send");
-                setStateMessage("Archivo enviado!");
+    useEffect(() => {
+        let unlisten: (() => void) | null = null;
+
+        const startTransfer = async () => {
+            setShowLoadingBar(true);
+
+            await invoke("ftp_server");
+
+            unlisten = await listen<number>("send_percentage", (event) => {
+                if (event.payload !== undefined) {
+                    setSendingProcess(event.payload);
+
+                    if (event.payload >= 100) {
+                        setShowLoadingBar(false);
+                        setStateMessage("Archivo Enviado!");
+                        setTransferState(true);
+                    }
+                }
+            });
+        };
+
+        startTransfer();
+
+        // Cleanup
+        return () => {
+            if (unlisten) {
+                unlisten();
             }
-        })
+        };
     }, []);
 
+
     const handleSendFile = async (fileName: string) => {
-        console.log("ip destino: ",deviceSelectedIp)
         await invoke("ftp_client", {
             filePath: fileName,
             targetDevice: deviceSelectedIp,
@@ -49,7 +75,8 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
                 disabled={!deviceSelected}>
                 <p className="text-white">Enviar archivos</p>
             </button>
-            <p className={`px-[25px] py-[5px] rounded-[5px] mt-[20px] success-transfer ${transferState}`} onAnimationEnd={() => setTransferState("")}>{stateMessage}</p>
+            <LoadingBar porcentaje={sendingProcess} showState={showLoadingBar}/>
+            <p className={`px-[25px] py-[5px] rounded-[5px] mt-[20px] success-transfer ${transferState? "show-send" : ""}`} onAnimationEnd={() => setTransferState(false)}>{stateMessage}</p>
         </div>
     )
 }
