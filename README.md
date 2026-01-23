@@ -6,8 +6,8 @@ Funciona mediante el descubrimiento de dispositivos mediante mDNS que se encuent
 
 #### Plataformas compatibles
 
-- Windows (estable)
-- Linux (en desarrollo)
+- Windows
+- Linux
 - MacOS (en desarrollo)
 
 #### Funcionamiento
