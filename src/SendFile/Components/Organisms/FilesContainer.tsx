@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import LoadFiles from "../Molecules/LoadFiles";
 import EditUserName from "../Molecules/EditUserName";
-import LoadingBar from "../Molecules/LoadingBar";
+import LoadingBar, { LoadingBarHandle } from "../Molecules/LoadingBar";
 
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
@@ -21,23 +21,26 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
     
     const [stateMessage, setStateMessage] = useState<string>("");
 
-    const [sendingProcess, setSendingProcess] = useState<number>(0);
-    const [showLoadingBar, setShowLoadingBar] = useState<boolean>(false);
+    //Cargar la referencia de la barra de carga
+    const loadingBarRef = useRef<LoadingBarHandle>(null);
 
     useEffect(() => {
         let unlisten: (() => void) | null = null;
 
         const startTransfer = async () => {
-            setShowLoadingBar(true);
 
             await invoke("ftp_server");
 
             unlisten = await listen<number>("send_percentage", (event) => {
                 if (event.payload !== undefined) {
-                    setSendingProcess(event.payload);
+                    
+                    if (loadingBarRef.current) {
+                        loadingBarRef.current.showBar(true);
+                        loadingBarRef.current.setProgress(event.payload);
+                    }
 
                     if (event.payload >= 100) {
-                        setShowLoadingBar(false);
+                        loadingBarRef.current?.showBar(false);
                         setStateMessage("Archivo Enviado!");
                         setTransferState(true);
                     }
@@ -75,7 +78,7 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
                 disabled={!deviceSelected}>
                 <p className="text-white">Enviar archivos</p>
             </button>
-            <LoadingBar porcentaje={sendingProcess} showState={showLoadingBar}/>
+            <LoadingBar ref={loadingBarRef}/>
             <p className={`px-[25px] py-[5px] rounded-[5px] mt-[20px] success-transfer ${transferState? "show-send" : ""}`} onAnimationEnd={() => setTransferState(false)}>{stateMessage}</p>
         </div>
     )
