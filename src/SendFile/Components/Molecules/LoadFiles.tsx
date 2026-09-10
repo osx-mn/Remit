@@ -30,7 +30,8 @@ const LoadFiles: React.FC<LoadFilesProps> = ({ onFileSelect }) => {
     };
     
     return (
-        <div className="w-3/5 h-2/5 bg-stone-950 rounded-md ml-1 flex items-center justify-center">
+        /* móvil: ancho completo con altura fija cómoda | PC: 60% de ancho con altura proporcional */
+        <div className="w-full md:w-3/5 h-[200px] md:h-2/5 bg-stone-950 rounded-md flex items-center justify-center mt-3">
             <div className="border border-stone-600 w-[95%] h-[95%] rounded-md flex flex-col items-center justify-center">
                 <p className="text-white text-center text-2xl">Cargar archivos</p>
 
@@ -40,7 +41,7 @@ const LoadFiles: React.FC<LoadFilesProps> = ({ onFileSelect }) => {
                     disabled={!deviceSelected}>
                         Seleccionar archivos</button>
 
-                <p className="text-white mt-5">{fileName.split(/[\\/]/).pop() ?? ""}</p>
+                <p className="text-white text-center mt-5 px-2 max-w-full break-all">{fileName.split(/[\\\/]/).pop() ?? ""}</p>
             </div>
         </div>
     );

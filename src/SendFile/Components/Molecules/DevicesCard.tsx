@@ -1,3 +1,4 @@
+import { useDevice } from "../../../context/DeviceContext";
 import DynamicTitle from "../Atoms/DynamicTitle";
 
 interface Dispositivo {
@@ -16,8 +17,11 @@ interface DevicesCardProps{
 
 const DevicesCard: React.FC<DevicesCardProps> = ({ deviceProps, getDeviceIp, deviceCardSelected}) => {
 
+    const { deviceSelectedIp } = useDevice();
+    const isSelected = deviceSelectedIp === deviceProps.ip;
+
     return(
-        <button className={`w-[90%] h-[40px] bg-[#303030] rounded-[5px] mt-[10px] center-v ${deviceCardSelected? "border border-white" : ""}`}
+        <button className={`w-[90%] h-[40px] bg-[#303030] rounded-[5px] mt-[10px] center-v ${isSelected ? "border border-white" : ""}`}
         onClick={() => getDeviceIp(deviceProps.ip)}>
            <DynamicTitle title={deviceProps.properties[0][1]}/>
         </button>

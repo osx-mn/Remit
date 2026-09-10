@@ -18,7 +18,9 @@ pub async fn ftp_client(
         Err(e) => return Err(format!("{}", e)),
     };
 
-    assert!(ftp_stream.login("anonymous", "").is_ok());
+    //----- Login ftp
+    ftp_stream.login("anonymous", "")
+        .map_err(|e| format!("Error login FTP: {}", e))?;
 
     //----- leer el archivo y almacenarlo en load_file
     let mut load_file = match File::open(&file_path) {

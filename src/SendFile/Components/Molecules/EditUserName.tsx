@@ -7,9 +7,10 @@ interface EditUserNameMoleculeProps {
 
 const EditUserNameMolecule: React.FC<EditUserNameMoleculeProps> = ({ userName, onClick }) =>{
     return(
-        <div className="flex center-all bg-[#252525] w-[60%] p-[5px] mb-[5px] rounded-[5px]">
+        /* móvil: ancho completo | PC: 60% centrado */
+        <div className="flex items-center justify-between bg-[#252525] w-full md:w-[60%] min-w-0 px-3 py-[5px] mb-[5px] rounded-[5px] gap-2">
             <DynamicTitle title={userName}/>
-            <button onClick={onClick} className="ml-2.5 border border-white rounded-[3px] h-[30px] pl-[5px] pr-[5px] text-white">EDIT NAME</button>
+            <button onClick={onClick} className="shrink-0 border border-white rounded-[3px] h-[30px] px-[8px] text-white text-sm">EDIT NAME</button>
         </div>
     )
 }

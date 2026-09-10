@@ -29,7 +29,7 @@ const LoadingBar = forwardRef<LoadingBarHandle>(({}, ref) => {
     }));
 
     return (
-        <div className="flex w-[60%] h-[20px] mt-[25px] success-transfer" style={{ opacity: 0}} ref={containerRef}>
+        <div className="flex w-full md:w-[60%] h-[20px] mt-[25px] success-transfer" style={{ opacity: 0}} ref={containerRef}>
             <div className="flex items-center w-full h-full rounded-[5px] bg-[#333E48]">
                 <div 
                     ref={barRef}

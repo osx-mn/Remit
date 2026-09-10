@@ -1,3 +1,5 @@
+use std::eprint;
+
 use crate::MdnsState;
 
 use crate::backend_db;
@@ -20,6 +22,15 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
     let daemon_state = state.daemon.clone();
     let service_full_name_state = state.service_full_name.clone();
 
+    // Guard: si ya existe un daemon mDNS activo, no crear otro
+    {
+        let guard = daemon_state.lock().unwrap();
+        if guard.is_some() {
+            println!("Daemon mDNS ya activo, ignorando llamada duplicada.");
+            return;
+        }
+    }
+
     tauri::async_runtime::spawn(async move {
         println!("Iniciando daemon...");
         let ty_domain: &str = "_remit_transfer._tcp.local.";
@@ -33,8 +44,17 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
         };
 
         let instance_name: &str = nombre_dispositivo.as_str();
-        let hostname: &str = "Remit.local.";
-        let this_device_ip: String = local_ip().unwrap().to_string();
+
+        //Definir hostname único por dispositivo
+        let sys_hostname = hostname::get()
+            .map(|h| h.to_string_lossy().into_owned())
+            .unwrap_or_else(|_| "remit-device".to_string());
+        let hostname_mdns = format!("{}.local.", sys_hostname);
+        
+        let this_device_ip: String = match local_ip(){
+            Ok(ip) => ip.to_string(),
+            Err(e) => { eprintln!("Error IP: {}", e); return; }
+        };
 
         let this_device_port = 8989;
 
@@ -43,7 +63,7 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
         let service_info = ServiceInfo::new(
             ty_domain,
             instance_name,
-            hostname,
+            &hostname_mdns,
             &this_device_ip,
             this_device_port,
             &properties[..],
@@ -76,7 +96,7 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
                     let external_device_ip = resolved
                         .get_addresses()
                         .iter()
-                        .next()
+                        .find(|ip| ip.is_ipv4())
                         .map(|ip| ip.to_string())
                         .unwrap_or_default();
 
@@ -97,8 +117,8 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
                         properties: properties.clone(),
                     };
 
-                    //enviar información de dispositivos encontrados diferentes al propio
-                    if this_device_ip != external_device_ip {
+                    //Determinar que los dispositivos encontrados sean diferentes del actual
+                    if resolved.get_fullname() != service_full_name {
                         let _ = app_handle.emit("mdns-device-found", dispositivo);
                     }
                 }

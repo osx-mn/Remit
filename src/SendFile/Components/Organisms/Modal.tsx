@@ -41,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({ModalActive, onClick, onNameChange}) => {
     };
 
     return(
-        <div id="modal" className={`${ModalActive ? 'flex flex-col' : 'hidden'} fixed w-[400px] h-[120px] ml-[40%] z-10 items-center justify-center bg-[#303030] rounded-[5px]`}>
+        <div id="modal" className={`${ModalActive ? 'flex flex-col' : 'hidden'} fixed inset-0 m-auto w-[min(400px,92vw)] h-[120px] z-10 items-center justify-center bg-[#303030] rounded-[5px]`}>
             <InputWithLabel
             id="input_name"
             label="NOMBRE DE USUARIO"

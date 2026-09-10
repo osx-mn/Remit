@@ -69,7 +69,8 @@ const FilesContainer: React.FC<FilesContainerProps> = ({onClick, username}) => {
     console.log("disables state: ", deviceSelected);
 
     return (
-        <div className="flex grow flex-col h-full justify-center items-center">
+        /* móvil: ancho completo, altura automática | PC: crece para ocupar espacio restante */
+        <div className="flex grow min-w-0 w-full flex-col md:h-full justify-center items-center py-4 md:py-0">
             <EditUserName onClick={onClick} userName={username} />
             <LoadFiles onFileSelect={setSelectedFile}/>
             <button 

@@ -1,4 +1,4 @@
-    import { useState, useEffect } from "react";
+    import { useState, useEffect, useRef } from "react";
     import { invoke } from "@tauri-apps/api/core";
     import { listen } from "@tauri-apps/api/event";
 
@@ -22,6 +22,9 @@
         const [username, setUsername] = useState("Empty");
         const [devices, setDevices] = useState<Map<string, Dispositivo>>(new Map());
 
+        // Guard: evita que find_devices se invoque más de una vez
+        const findDevicesCalledRef = useRef(false);
+
         //Funcion para obtener el nombre del usuario desde rust
         const fetchUserName = async () => {
             try {
@@ -32,11 +35,15 @@
             }
         }
 
-        //obtener la lista de dispositivos desde rust
-        const get_devices_list = async() =>{
+        useEffect(() => {
+            fetchUserName();
 
-                //detecta un dispositivo en la red de tipo remit
-                const unlistenFound = await listen<Dispositivo>(
+            let unlistenFound: (() => void) | null = null;
+            let unlistenRemove: (() => void) | null = null;
+
+            const setup = async () => {
+                // Detecta un dispositivo en la red de tipo remit
+                unlistenFound = await listen<Dispositivo>(
                     "mdns-device-found",
                     (event) => {
                         setDevices(prev => {
@@ -48,33 +55,33 @@
                     }
                 );
 
-                //detecta cuando un dispositivo se remueve de la red de tipo remit
-                const unListenRemove = await listen<string>(
+                // Detecta cuando un dispositivo se remueve de la red
+                unlistenRemove = await listen<string>(
                     "mdns-device-removed",
                     (event) => {
                         setDevices(prev => {
                             const next: Map<string, Dispositivo> = new Map(prev);
-                            console.log("Estado previo: ", next);
                             next.delete(event.payload);
-                            console.log("payload completo: ", event.payload);
-                            console.log("Estado actual: ", next);
+                            console.log("Dispositivo removido: ", event.payload);
                             return next;
-                        })
+                        });
                     }
                 );
 
-                await invoke("find_devices");
-
-                return () => {
-                    unlistenFound();
-                    unListenRemove();
+                // Invocar find_devices solo una vez aunque el componente se monte dos veces
+                if (!findDevicesCalledRef.current) {
+                    findDevicesCalledRef.current = true;
+                    await invoke("find_devices");
                 }
+            };
 
-            }
+            setup();
 
-        useEffect(() => {
-            fetchUserName();
-            get_devices_list();
+            // Cleanup: desregistra los listeners al desmontar el componente
+            return () => {
+                unlistenFound?.();
+                unlistenRemove?.();
+            };
         }, []);
 
         //ver los cambios en Dispositivos
@@ -92,7 +99,8 @@
 
         return(
             <DeviceProvider>
-                <div className="flex items-center w-full h-full bg-[#161616]">
+                {/* móvil: columna con scroll vertical | PC: fila sin scroll */}
+                <div className="flex flex-col md:flex-row w-full flex-1 min-h-0 bg-[#161616] overflow-y-auto md:overflow-hidden p-2 gap-2">
                     <DevicesContainer
                         key={"devContKey"}
                         devicesList={Array.from(devices.values())}/>

@@ -39,7 +39,7 @@ pub async fn ftp_server(app: tauri::AppHandle) -> Result<(), String> {
             "Dirección de recepción de archivos: {}",
             &documents_dir.display()
         );
-        server.listen(format!("{}:{}", ip, port)).await.unwrap();
+        server.listen(format!("0.0.0.0:{}", port)).await.unwrap();
     });
 
     Ok(())
