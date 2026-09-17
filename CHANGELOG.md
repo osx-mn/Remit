@@ -1,12 +1,10 @@
 # Changelog — Remit
 
-## [1.1.1] — 2026-09-08
+## [1.1.2] — 2026-09-15
 
 ### Corregido
 
-- Se corrigió la detección del propio dispositivo y de otros equipos mediante nombres mDNS únicos y hostnames dinámicos.
-- Se evitó la creación duplicada de daemons mDNS y la acumulación de listeners al remontar la interfaz.
-- Se controló la ausencia de red para evitar cierres inesperados.
-- El servidor FTP ahora escucha en todas las interfaces y el cliente propaga los errores de inicio de sesión sin colapsar la aplicación.
-- Se corrigió el resaltado de dispositivos para que solo se seleccione la tarjeta correspondiente.
-- Se unificó el puerto anunciado por mDNS con el puerto del servidor FTP.
+- Se solucionó la selección de archivos en Android: ahora se abren correctamente las URI `content://` que devuelve el selector nativo del sistema (a través de `tauri-plugin-fs`), sin necesidad de pedir permisos amplios de almacenamiento.
+- Se corrigió la ubicación donde se inicializaba `remit_data.db` en Android, para que use el directorio de datos privado de la app en lugar de una ubicación menos segura.
+- Se unificó el cliente FTP en una sola implementación multiplataforma, usada tanto en escritorio como en Android, reduciendo duplicación de código y posibles inconsistencias.
+- Se corrigió el nombre de los archivos enviados desde Android: ahora se obtiene `DISPLAY_NAME` del proveedor de documentos y se conserva la extensión original.

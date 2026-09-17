@@ -1,13 +1,17 @@
 {
   "name": "remit",
   "private": true,
-  "version": "1.1.0",
+  "version": "1.1.2",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "desktop:dev": "powershell -ExecutionPolicy Bypass -File ./scripts/desktop-dev.ps1",
+    "desktop:build": "powershell -ExecutionPolicy Bypass -File ./scripts/desktop-build.ps1 build",
+    "android:dev": "powershell -ExecutionPolicy Bypass -File ./scripts/android-dev.ps1",
+    "android:build": "powershell -ExecutionPolicy Bypass -File ./scripts/android-build.ps1"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.17",

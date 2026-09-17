@@ -1,7 +1,13 @@
 use std::io::{Read, Write};
-use std::{fs::File, path::Path};
+use std::str::FromStr;
+#[cfg(not(target_os = "android"))]
+use std::path::Path;
 use suppaftp::FtpStream;
 use tauri::{command, Emitter};
+use tauri_plugin_fs::{FilePath, FsExt, OpenOptions};
+
+#[cfg(target_os = "android")]
+use crate::android_file;
 
 #[command]
 pub async fn ftp_client(
@@ -23,7 +29,12 @@ pub async fn ftp_client(
         .map_err(|e| format!("Error login FTP: {}", e))?;
 
     //----- leer el archivo y almacenarlo en load_file
-    let mut load_file = match File::open(&file_path) {
+    let selected_path = FilePath::from_str(&file_path)
+        .map_err(|e| format!("Ruta de archivo no valida: {}", e))?;
+    let mut file_options = OpenOptions::new();
+    file_options.read(true);
+
+    let mut load_file = match app_handle.fs().open(selected_path, file_options) {
         Ok(archivo) => archivo,
         Err(e) => return Err(format!("No se pudo abrir el archivo: {}", e)),
     };
@@ -34,10 +45,14 @@ pub async fn ftp_client(
         total_bytes
     );
 
-    //----- obtener el nombre del archivo para compartirlo con el mismo nombre
+    // Android devuelve content:// URIs; su ultimo segmento no es el nombre real.
+    #[cfg(target_os = "android")]
+    let file_name = android_file::display_name(&app_handle, &file_path)?;
+
+    #[cfg(not(target_os = "android"))]
     let file_name: String = Path::new(&file_path)
         .file_name()
-        .unwrap()
+        .ok_or_else(|| "No se pudo obtener el nombre del archivo".to_string())?
         .to_string_lossy()
         .into_owned();
 

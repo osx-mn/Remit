@@ -12,10 +12,9 @@ interface Dispositivo {
 interface DevicesCardProps{
     deviceProps: Dispositivo;
     getDeviceIp: (ip: string) => void;
-    deviceCardSelected: boolean;
 }
 
-const DevicesCard: React.FC<DevicesCardProps> = ({ deviceProps, getDeviceIp, deviceCardSelected}) => {
+const DevicesCard: React.FC<DevicesCardProps> = ({ deviceProps, getDeviceIp}) => {
 
     const { deviceSelectedIp } = useDevice();
     const isSelected = deviceSelectedIp === deviceProps.ip;

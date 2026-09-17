@@ -30,7 +30,7 @@ pub async fn ftp_server(app: tauri::AppHandle) -> Result<(), String> {
     tauri::async_runtime::spawn(async move {
         let server = libunftp::Server::with_fs(documents_dir.clone())
             .greeting("Welcome to my FTP server")
-            .passive_ports(50000..=65535)
+            .passive_ports(50000..=50010)
             .build()
             .unwrap();
 

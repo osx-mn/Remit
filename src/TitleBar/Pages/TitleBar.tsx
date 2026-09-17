@@ -1,4 +1,4 @@
-import { Window } from "@tauri-apps/api/window";
+import { getCurrentWindow } from "@tauri-apps/api/window";
 
 import CloseButton from "../Components/Atoms/CloseButton";
 import MinimizeButton from "../Components/Atoms/MinimizeButton";
@@ -7,7 +7,7 @@ import MaximizeButton from "../Components/Atoms/MaximizeButton";
 import { CloseIcon, MinimizeIcon, MaximizeIcon } from "../TitleBarIcons/TitleBarIcons";
 
 const TitleBar: React.FC = () => {
-    const appwindow = Window.getCurrent();
+    const appwindow = getCurrentWindow();
 
     const minimize = () => { appwindow.minimize(); }
     const maximize = () => { appwindow.toggleMaximize(); }

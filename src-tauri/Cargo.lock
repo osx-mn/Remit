@@ -3663,7 +3663,7 @@ checksum = "7a2d987857b319362043e95f5353c0535c1f58eec5336fdfcf626430af7def58"
 
 [[package]]
 name = "remit"
-version = "1.1.0"
+version = "1.1.2"
 dependencies = [
  "hostname",
  "libunftp",
@@ -3676,6 +3676,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-dialog",
+ "tauri-plugin-fs",
  "tauri-plugin-opener",
  "unftp-sbe-fs",
 ]

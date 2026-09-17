@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
+import { invoke } from "@tauri-apps/api/core";
 
 import { useDevice } from "../../../context/DeviceContext";
 
@@ -21,7 +22,12 @@ const LoadFiles: React.FC<LoadFilesProps> = ({ onFileSelect }) => {
                 directory: false,
             })
             if(selectFilePath){
-                setFileName(selectFilePath);
+                const displayName = /Android/i.test(navigator.userAgent)
+                    ? await invoke<string>("get_file_display_name", {
+                        filePath: selectFilePath,
+                    })
+                    : selectFilePath;
+                setFileName(displayName);
                 onFileSelect(selectFilePath);
             }
         }catch(error){

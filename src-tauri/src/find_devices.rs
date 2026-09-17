@@ -1,5 +1,3 @@
-use std::eprint;
-
 use crate::MdnsState;
 
 use crate::backend_db;
@@ -31,11 +29,12 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
         }
     }
 
+    let db_app_handle = app_handle.clone();
     tauri::async_runtime::spawn(async move {
         println!("Iniciando daemon...");
         let ty_domain: &str = "_remit_transfer._tcp.local.";
 
-        let nombre_dispositivo = match backend_db::user_app() {
+        let nombre_dispositivo = match backend_db::user_app(db_app_handle) {
             Ok(nombre) => nombre,
             Err(e) => {
                 eprintln!("Error al leer el nombre: {}", e);

@@ -17,7 +17,9 @@ export default defineConfig(async () => ({
   server: {
     port: 1420,
     strictPort: true,
-    host: host || false,
+    // Android accesses the dev server through the machine's LAN address.
+    // Bind all interfaces and use TAURI_DEV_HOST only for the advertised HMR host.
+    host: host ? true : false,
     hmr: host
       ? {
           protocol: "ws",

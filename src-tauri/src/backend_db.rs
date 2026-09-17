@@ -1,7 +1,7 @@
 use rusqlite::Connection;
 use serde::Serialize;
 
-use tauri::command;
+use tauri::{AppHandle, Manager, command};
 
 #[derive(Debug, Serialize)]
 pub struct Dispositivos {
@@ -15,11 +15,22 @@ pub struct UsuarioApp {
 }
 
 #[command]
-pub fn consultas_db() -> Result<Vec<Dispositivos>, String> {
-    let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
+pub fn consultas_db(app: AppHandle) -> Result<Vec<Dispositivos>, String> {
 
-    //NOTA!, en lugar de utiliar un simple "?", utilio un map_err(|e| e.to_string())?
-    // para que el frontend pueda manejar el error como un string
+    //inicia inicialización a base de datos
+    let data_dir = app.path().app_local_data_dir()
+        .map_err(|e| e.to_string())?;
+
+    std::fs::create_dir_all(&data_dir)
+        .map_err(|e| e.to_string())?;
+
+    let db_path = data_dir.join("remit_data.db");
+    
+    let conn = Connection::open(db_path)
+        .map_err(|e| e.to_string())?;
+    
+    init_db(&conn)?;
+    // fin inicialización de base de datos
 
     //recuperar la lista de dispositivos
     let mut stmt = conn
@@ -44,9 +55,22 @@ pub fn consultas_db() -> Result<Vec<Dispositivos>, String> {
 }
 
 #[command]
-pub fn user_app() -> Result<String, String> {
-    let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
-    init_db().unwrap();
+pub fn user_app(app: AppHandle) -> Result<String, String> {
+
+    //inicia inicialización a base de datos
+    let data_dir = app.path().app_local_data_dir()
+        .map_err(|e| e.to_string())?;
+
+    std::fs::create_dir_all(&data_dir)
+        .map_err(|e| e.to_string())?;
+
+    let db_path = data_dir.join("remit_data.db");
+    
+    let conn = Connection::open(db_path)
+        .map_err(|e| e.to_string())?;
+    
+    init_db(&conn)?;
+    // fin inicialización de base de datos
 
     //si el usuario no tiene nombre, se muestra el nombre del dispositivo host
     let res: String = if username_exists(&conn) {
@@ -81,8 +105,22 @@ pub fn user_app() -> Result<String, String> {
 }
 
 #[command]
-pub fn change_username(new_name: String) -> Result<(), String> {
-    let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
+pub fn change_username(app: AppHandle, new_name: String) -> Result<(), String> {
+    
+    //inicia inicialización a base de datos
+    let data_dir = app.path().app_local_data_dir()
+        .map_err(|e| e.to_string())?;
+
+    std::fs::create_dir_all(&data_dir)
+        .map_err(|e| e.to_string())?;
+
+    let db_path = data_dir.join("remit_data.db");
+    
+    let conn = Connection::open(db_path)
+        .map_err(|e| e.to_string())?;
+    
+    init_db(&conn)?;
+    // fin inicialización de base de datos
 
     println!("nombre entrante: {:?}", new_name);
 
@@ -129,9 +167,7 @@ fn username_exists(conn: &Connection) -> bool {
 
 //inicializar la base de datos
 //solo se ejecuta la primera vez que se ejecuta la app
-fn init_db() -> Result<(), String> {
-    let conn = Connection::open("remit_data.db").map_err(|e| e.to_string())?;
-
+fn init_db(conn: &Connection) -> Result<(), String> {
     //comprobar que no existen tablas
     let tablas_count: i8 = conn
         .query_row("SELECT count(*) from sqlite_master", [], |row| row.get(0))
