@@ -1,7 +1,6 @@
 # Ejecuta la app Android en modo desarrollo con hot reload (tauri android dev).
 # Uso:
 #   ./scripts/android-dev.ps1
-#   ./scripts/android-dev.ps1 Pixel_7     (dispositivo o emulador)
 #   ./scripts/android-dev.ps1 -Asm        (no define AWS_LC_SYS_NO_ASM)
 # Variable opcional:
 #   TAURI_CMD   comando de Tauri (defecto: "cargo tauri"), ej: "bun run tauri"

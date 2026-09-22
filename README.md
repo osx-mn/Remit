@@ -7,9 +7,6 @@
 
 Los instaladores para las diferentes plataformas se encuentran en la sección [Releases](https://github.com/osx-mn/Remit/releases).
 
-- **Windows / macOS / Linux**: se generan automáticamente en cada release.
-- **Android**: se compila localmente y se sube al release manualmente, por lo que puede tardar en aparecer respecto a los instaladores de escritorio.
-
 #### Uso
 
 Al iniciar Remit, detecta automáticamente otros dispositivos en la misma red local que estén ejecutando la aplicación, permitiendo enviar archivos directamente.
@@ -28,11 +25,11 @@ bun install
 
 > Reemplaza `bun install` por `npm install` si prefieres npm.
 
-Remit usa [Tauri](https://tauri.app/) + Rust, y la compilación de Android requiere **Ninja** como generador de CMake (el generador por defecto falla al compilar `aws-lc-sys`).
+Remit usa [Tauri](https://tauri.app/) + Rust. La compilación de Android requiere **Ninja** como generador de CMake (el generador por defecto falla al compilar `aws-lc-sys`). Las ejecuciones de los comandos personalizados guardan la salida en archivos fechados dentro de `logs/`.
 
 ##### Windows
 
-Los scripts de PowerShell configuran las variables de entorno necesarias automáticamente:
+Los comandos personalizados configuran y limpian automáticamente las variables de entorno necesarias para cada plataforma:
 
 ```bash
 bun run desktop:dev      # Modo desarrollo (escritorio)
@@ -41,17 +38,19 @@ bun run android:dev      # Modo desarrollo (Android)
 bun run android:build    # Build de producción (Android)
 ```
 
+El desarrollo de Android usa `AWS_LC_SYS_NO_ASM=1` por defecto para evitar requerir Perl/NASM. Para compilar usando ensamblador, ejecuta `bun run android:dev -- -Asm`. El build de producción genera APKs release, los alinea y firma con un keystore ubicado fuera del repositorio; si no existe, el comando lo crea y solicita su contraseña. También intenta instalar el APK correspondiente mediante `adb`. Para omitir la instalación, usa `bun run android:build -- -NoInstall`.
+
+La compilación Android en Windows requiere `ANDROID_HOME` apuntando al Android SDK, Android Build Tools, `adb` y Java (`keytool`). Puedes configurar el keystore y sus credenciales mediante `TAURI_KEYSTORE`, `TAURI_KEY_ALIAS` y `TAURI_KS_PASS`.
+
 ##### macOS / Linux
 
-Instala Ninja (`brew install ninja` en macOS, `apt install ninja-build` en Linux) y define las mismas variables de entorno manualmente:
+Instala Ninja (`brew install ninja` en macOS, `apt install ninja-build` en Linux) y configura las variables de entorno manualmente para Android:
 
 ```bash
 # Escritorio - desarrollo
-# ( recordar remover las variables luego de haber compilado en android )
 cargo tauri dev
 
 # Escritorio - build de producción
-# ( recordar remover las variables luego de haber compilado en android )
 cargo tauri build
 
 # Android - desarrollo
@@ -66,7 +65,7 @@ export AWS_LC_SYS_CMAKE_GENERATOR=Ninja
 cargo tauri android build
 ```
 
-> Soporte de Android/iOS en macOS y Linux aún no está probado oficialmente — si lo pruebas, feedback y PRs son bienvenidos.
+> Los soportes en Linux/MacOS/IOs no están probados aún oficialmente — si lo pruebas, feedback y PRs son bienvenidos.
 
 #### Licencia
 
