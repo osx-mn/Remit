@@ -40,6 +40,7 @@ pub fn run() {
             backend_db::user_app,
             backend_db::change_username,
             find_devices::find_devices,
+            find_devices::refresh_devices,
             ftp_server::ftp_server,
             ftp_client::ftp_client,
             utils::show_custom_titlebar_in_os,

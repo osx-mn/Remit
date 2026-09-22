@@ -130,3 +130,20 @@ pub fn find_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>
         }
     });
 }
+
+#[command]
+pub fn refresh_devices(app_handle: tauri::AppHandle, state: tauri::State<MdnsState>) {
+    let daemon = state.daemon.clone();
+    let service_full_name = state.service_full_name.clone();
+
+    if let Ok(mut guard) = daemon.lock() {
+        if let Some(active_daemon) = guard.take() {
+            if let Some(full_name) = service_full_name.lock().unwrap().take() {
+                let _ = active_daemon.unregister(&full_name);
+            }
+            let _ = active_daemon.shutdown();
+        }
+    }
+
+    find_devices(app_handle, state);
+}

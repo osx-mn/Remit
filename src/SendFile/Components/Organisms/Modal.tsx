@@ -28,7 +28,8 @@ const Modal: React.FC<ModalProps> = ({ModalActive, onClick, onNameChange}) => {
 
     const handleSubmit = async () =>{
         if (inputName.trim().length != 0){
-            setUserName();
+            await setUserName();
+            await invoke("refresh_devices");
             setInputName("");
             onClick();
             await onNameChange();

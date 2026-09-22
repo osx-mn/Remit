@@ -76,6 +76,7 @@ pub async fn ftp_server(app: tauri::AppHandle) -> Result<(), String> {
     let port: u16 = 2001;
 
     // Clon del AppHandle para usarlo dentro del hilo del watcher (solo Android)
+    #[cfg(target_os = "android")]
     let app_for_watch = app.clone();
 
     //----- Encendido asíncrono del servidor ftp

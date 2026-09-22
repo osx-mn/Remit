@@ -48,6 +48,11 @@
                     (event) => {
                         setDevices(prev => {
                             const next = new Map(prev);
+                            for (const [key, device] of next) {
+                                if (device.ip === event.payload.ip || device.disp_name === event.payload.disp_name) {
+                                    next.delete(key);
+                                }
+                            }
                             next.set(event.payload.full_name, event.payload);
                             console.log("Dispositivo encontrado: ", event.payload);
                             return next;
