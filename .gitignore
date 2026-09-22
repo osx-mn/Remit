@@ -38,9 +38,7 @@ src-tauri/gen/android/app/src/main/java/com/osxar/remit/file/*
 .zed/
 
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-!.vscode/settings.json
+.vscode/
 .idea
 .DS_Store
 *.suo

@@ -1,6 +1,6 @@
 [package]
 name = "remit"
-version = "1.1.2"
+version = "1.1.3"
 description = "A Tauri App"
 authors = ["osx-mn"]
 edition = "2021"
@@ -31,4 +31,4 @@ tauri-plugin-dialog = "2"
 suppaftp = { version = "7.0.7", default-features = false }
 libunftp = { version = "0.21.0", default-features = false }
 unftp-sbe-fs = "0.3.0"
-
+notify= "8.2.0"

@@ -15,8 +15,21 @@ struct DisplayNameResponse {
     name: Option<String>,
 }
 
+// Payload para pedirle al plugin Android que copie un archivo a la carpeta pública Documentos
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+struct SaveToDocumentsPayload<'a> {
+    file_path: &'a str,
+    file_name: &'a str,
+}
+
+// Respuesta vacía esperada del plugin nativo (Kotlin resuelve con un JSObject vacío, no con unit)
+#[derive(Debug, Deserialize)]
+struct EmptyResponse {}
+
 pub struct AndroidFile<R: Runtime>(PluginHandle<R>);
 
+// Registra el plugin nativo de Android al iniciar la app
 pub fn init<R: Runtime>() -> tauri::Result<TauriPlugin<R>> {
     Ok(Builder::new("android-file")
         .setup(|app, api| {
@@ -30,6 +43,7 @@ pub fn init<R: Runtime>() -> tauri::Result<TauriPlugin<R>> {
         .build())
 }
 
+// Pide al lado Kotlin el nombre real de un archivo a partir de su URI content://
 pub fn display_name<R: Runtime>(
     app_handle: &AppHandle<R>,
     uri: &str,
@@ -47,6 +61,24 @@ pub fn display_name<R: Runtime>(
         .name
         .filter(|name| !name.is_empty())
         .ok_or_else(|| "Android no devolvio el nombre del archivo".to_string())
+}
+
+// Pide al lado Kotlin que copie un archivo privado hacia la carpeta pública de Descargas (MediaStore)
+pub fn save_to_documents<R: Runtime>(
+    app_handle: &AppHandle<R>,
+    file_path: &str,
+    file_name: &str,
+) -> Result<(), String> {
+    let plugin = app_handle.state::<AndroidFile<R>>();
+    plugin
+        .0
+        .run_mobile_plugin::<EmptyResponse>(
+            "saveToDocuments",
+            SaveToDocumentsPayload { file_path, file_name },
+        )
+        .map_err(|e| e.to_string())?;
+
+    Ok(())
 }
 
 #[tauri::command]
