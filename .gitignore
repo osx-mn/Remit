@@ -1,4 +1,18 @@
-# Logs
+# Build output
+builds/
+dist/
+dist-ssr/
+target/
+
+# Build and test caches
+coverage/
+.cache/
+.gradle/
+
+# Dependencies
+node_modules/
+
+# Logs and local metadata
 logs/
 *.log
 npm-debug.log*
@@ -6,12 +20,24 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+*.ffs_db
 
+# Personal workspace files
 skills/*
+.cargo/
+.zed/
 
-node_modules
-dist
-dist-ssr
+# Editor files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Tauri generated files, except the maintained Android plugin
 src-tauri/gen/
 !src-tauri/gen/
 src-tauri/gen/*
@@ -34,15 +60,3 @@ src-tauri/gen/android/app/src/main/java/com/osxar/remit/*
 !src-tauri/gen/android/app/src/main/java/com/osxar/remit/file/
 src-tauri/gen/android/app/src/main/java/com/osxar/remit/file/*
 !src-tauri/gen/android/app/src/main/java/com/osxar/remit/file/FilePlugin.kt
-.cargo/
-.zed/
-
-# Editor directories and files
-.vscode/
-.idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
