@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-            - name: Instalar dependencias del sistema (Linux)
+      - name: Instalar dependencias del sistema (Linux)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
