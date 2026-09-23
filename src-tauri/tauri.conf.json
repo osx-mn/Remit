@@ -28,9 +28,9 @@
     "active": true,
     "targets": "all",
     "icon": [
-      "icons/Remit.svg",
-      "icons/Remit.png",
-      "icons/Remit.ico"
+      "icons/icon.png",
+      "icons/icon.ico",
+      "icons/icon.icns"
     ]
   }
 }
