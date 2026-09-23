@@ -8,6 +8,9 @@ on:
 
 jobs:
   release:
+    permissions:
+      contents: write
+
     strategy:
       fail-fast: false
       matrix:
@@ -45,12 +48,12 @@ jobs:
         run: bun install
 
       - name: Build y publicar con Tauri
-        uses: tauri-apps/tauri-action@v0
+        uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'Remit ${{ github.ref_name }}'
+          tagName: v__VERSION__
+          releaseName: 'Remit v__VERSION__'
           releaseBody: 'Ver CHANGELOG.md para detalles de esta versión.'
           releaseDraft: true
           prerelease: false
