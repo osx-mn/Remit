@@ -83,8 +83,8 @@ pub async fn ftp_client(
         let _ = app_handle.emit("send_percentage", porcentaje).unwrap();
     }
 
-    ftp_stream
-        .finalize_put_stream(ftp_writer)
+    ftp_writer
+        .finish()
         .map_err(|e| e.to_string())?;
     let _ = app_handle.emit("send_status", true).unwrap();
 

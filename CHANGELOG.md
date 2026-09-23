@@ -1,8 +1,8 @@
 # Changelog — Remit
 
-## [1.1.4] — 2026-09-22
+## [1.1.5] - 2026-09-22
 
-### Corregido
+### Cambiado
 
-- Se scorrigió la incompatibilidad del ícono de la APP en android
-- Se arregló la actualización de la lista de dispositivos al cambiar el nombre del dispositivo en ejecución
+- Mejoras de estabilidad en la transferencia de archivos por FTP.
+- Actualización de dependencias internas.

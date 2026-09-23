@@ -1,6 +1,7 @@
 use local_ip_address::local_ip;
+use libunftp::ServerBuilder;
 use tauri::{command, Manager};
-use unftp_sbe_fs::ServerExt;
+use unftp_sbe_fs::Filesystem;
 
 // Solo se usa en Android para llamar al plugin nativo que mueve archivos a Documentos
 #[cfg(target_os = "android")]
@@ -81,7 +82,10 @@ pub async fn ftp_server(app: tauri::AppHandle) -> Result<(), String> {
 
     //----- Encendido asíncrono del servidor ftp
     tauri::async_runtime::spawn(async move {
-        let server = libunftp::Server::with_fs(documents_dir.clone())
+        let server_documents_dir = documents_dir.clone();
+        let server = ServerBuilder::new(Box::new(move || {
+            Filesystem::new(server_documents_dir.clone()).unwrap()
+        }))
             .greeting("Welcome to my FTP server")
             .passive_ports(50000..=50010)
             .build()
