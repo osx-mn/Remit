@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Instalar dependencias del sistema (Linux)
-        if: matrix.platform == 'ubuntu-latest'
+        if: ${{ matrix.platform == 'ubuntu-latest' }}
         run: |
           sudo apt-get update
           sudo apt-get remove -y libappindicator3-1
