@@ -17,10 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Instalar dependencias del sistema (Linux)
+            - name: Instalar dependencias del sistema (Linux)
         if: matrix.platform == 'ubuntu-latest'
         run: |
           sudo apt-get update
+          sudo apt-get remove -y libappindicator3-1
           sudo apt-get install -y \
             libwebkit2gtk-4.1-dev \
             librsvg2-dev \
